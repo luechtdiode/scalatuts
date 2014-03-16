@@ -19,7 +19,7 @@ import java.net.InetAddress
 import org.apache.log4j.Logger
 
 object PDMWorkerClient extends App {
-  val logger = Logger.getLogger(this.getClass())
+  val logger: Logger = Logger.getLogger("APPL." + getClass.getName())// LogManager.getLogger(getClass)
   
   // port kann somit übersteuert werden
   if (args.nonEmpty)
@@ -56,7 +56,7 @@ object PDMWorkerClient extends App {
 }
 
 class PDMWorkerClient(systemname: String, initContacts: java.util.List[Address], config: Config) {
-  import PDMWorkerClient.logger
+  val logger: Logger = Logger.getLogger("APPL." + getClass.getName())// LogManager.getLogger(getClass)
   
   private val system = ActorSystem(systemname, config)
   

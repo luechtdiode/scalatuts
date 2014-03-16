@@ -35,6 +35,7 @@ class PDMSpec extends AkkaSpec {
     }
     "acknowledge after successfull abo-registration msg" in {
       val publisher = system.actorOf(Publisher.props("pdm-persistence"))
+      
       publisher ! Subscribe(Abonnement("test", 1, Some("test")))
       fishForMessage() {
         case Subscription("test") => true

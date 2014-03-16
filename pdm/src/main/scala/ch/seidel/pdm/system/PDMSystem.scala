@@ -29,7 +29,7 @@ import org.apache.log4j.Logger
 
 object PDMSystem extends App {
   import Publisher._
-  val logger = Logger.getLogger(this.getClass())
+  val logger: Logger = Logger.getLogger("APPL." + getClass.getName())// LogManager.getLogger(getClass)
   
   if (args.nonEmpty) try {
     val port = "" + args(0).toInt
@@ -61,6 +61,7 @@ object PDMSystem extends App {
 
 class PDMSystem(config: Config, clusterNodes: Seq[Address]) {
   import PDMSystem._
+  val logger: Logger = Logger.getLogger("APPL." + getClass.getName())// LogManager.getLogger(getClass)
   
   val master = List("eins", "zwei", "drei", "vier", "fuenf", "sechs", "sieben", "acht", "neun", "zehn")
   

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.seidel</groupId>
   <artifactId>pdm-core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.4-SNAPSHOT</version>
   <inceptionYear>2014</inceptionYear>
   <properties>
     <scala.version>2.10.3</scala.version>
@@ -10,7 +10,7 @@
     <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
   </properties>
 
-  <repositories>
+  <!-- repositories>
     <repository>
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
@@ -36,7 +36,7 @@
       <releases><enabled>true</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
      </pluginRepository>
-  </pluginRepositories>
+  </pluginRepositories-->
 
   <dependencies>
     <dependency>

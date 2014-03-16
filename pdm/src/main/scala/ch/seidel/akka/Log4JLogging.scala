@@ -16,9 +16,9 @@ trait Log4JLogging extends Actor with ActorStack {
   override def receive: Receive = {
     case x =>
       //ThreadContext.push("akkaSource", myPath)
-      MDC.put("akkaSource", myPath)
+      //MDC.put("akkaSource", myPath)
       super.receive(x)
       //ThreadContext.pop();
-      MDC.remove("akkaSource")
+      //MDC.remove("akkaSource")
   }
 }
