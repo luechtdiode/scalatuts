@@ -60,20 +60,18 @@ class PDMWorkerClient(systemname: String, initContacts: java.util.List[Address],
   
   private val system = ActorSystem(systemname, config)
   
-  private val initialContacts: Set[ActorSelection] = 
-    JavaConversions.asScalaIterator(initContacts.iterator()).map {
-      adr => system.actorSelection(RootActorPath(adr) / "user" / "receptionist")}.toSet
-      
-  private val clusterClient: ActorRef = 
-    system.actorOf(ClusterClient.props(initialContacts), "pdm-subscriber")
+  private val clusterNodes: Set[Address] = 
+    JavaConversions.asScalaIterator(initContacts.iterator()).toSet
     
-  //var subscription: Option[Subscription] = None
+  private val clusterClient: ActorRef = 
+    system.actorOf(SubscriptionClientActor.props(clusterNodes), "pdm-subscriber")
+    
   private var workers: List[ActorRef] = List.empty
   private var workerMethods: Map[ActorRef, WorkerMethod[Work]] = Map.empty
   
   def subscribe(abo: Abonnement) = {
     implicit val t = Timeout(10, SECONDS)
-    (clusterClient ? ClusterClient.Send("/user/publisher", Subscribe(abo), false)) onComplete {
+    (clusterClient ? Subscribe(abo)) onComplete {
       case t: Any =>
         logger.info(t)
     }
@@ -81,7 +79,7 @@ class PDMWorkerClient(systemname: String, initContacts: java.util.List[Address],
   
   def unsubscribe(aboId: String) = {
     implicit val t = Timeout(10, SECONDS)
-    (clusterClient ? ClusterClient.Send("/user/publisher", Unsubscribe(aboId), false))
+    (clusterClient ? Unsubscribe(aboId))
   }
   
   def addWorker(worker: WorkerMethod[Work], subscr: Subscription) = {
@@ -167,7 +165,7 @@ class PDMWorkerClient(systemname: String, initContacts: java.util.List[Address],
   
         case "subscribe" => abo match {
           case Some(a) => 
-            unsubscribe(a.id)
+            //unsubscribe(a.id)
             abo = Some(Abonnement(aboId, 0, Some(itemfilter)))
             subscribe(abo.get)
           case None => 
@@ -178,7 +176,7 @@ class PDMWorkerClient(systemname: String, initContacts: java.util.List[Address],
         case s: String if(s.matches("subscribe\\(\\S*\\)")) => abo match {
           case None =>
           case Some(a) =>
-            unsubscribe(a.id)
+            //unsubscribe(a.id)
           }
           val id = "\\(\\S*\\)".r.findFirstIn(s).get.replace("(","").replace(")","")
           if(master.indexOf(id) < 0) {
