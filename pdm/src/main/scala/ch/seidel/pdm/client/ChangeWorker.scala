@@ -1,33 +1,27 @@
 package ch.seidel.pdm.client
 
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.duration.Duration._
-import scala.concurrent.duration._
-import scala.collection.mutable.Queue
-import scala.language.postfixOps
-import scala.collection.mutable
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration.Undefined
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
+
 import akka.actor.Actor
-import akka.actor.ActorRef
-import akka.actor.OneForOneStrategy
-import akka.actor.Props
-import akka.actor.SupervisorStrategy.Restart
-import akka.actor.actorRef2Scala
-import akka.actor.Terminated
-import akka.actor.ReceiveTimeout
-import akka.actor.Terminated
-import akka.util.Timeout
-import akka.pattern._
-import akka.contrib.pattern.ClusterClient
-import akka.actor.PoisonPill
-import ch.seidel.akka.Log4JLogging
-import ch.seidel.pdm.PDMPattern._
-import ch.seidel.pdm.PDMSystemPattern._
-import akka.actor.RootActorPath
-import akka.actor.ActorPath
-import scala.collection.JavaConversions
+import akka.actor.ActorSelection.toScala
 import akka.actor.Address
+import akka.actor.Props
+import akka.actor.ReceiveTimeout
+import akka.actor.RootActorPath
+import akka.actor.Terminated
+import akka.actor.actorRef2Scala
+import ch.seidel.akka.Log4JLogging
+import ch.seidel.pdm.PDMPattern.GiveWork
+import ch.seidel.pdm.PDMPattern.NowWorking
+import ch.seidel.pdm.PDMPattern.RegisterAck
+import ch.seidel.pdm.PDMPattern.RegisterWorker
+import ch.seidel.pdm.PDMPattern.Subscription
+import ch.seidel.pdm.PDMPattern.Work
+import ch.seidel.pdm.PDMPattern.WorkAvailable
 
 object ChangeWorker {
   def props(init: Subscription, workerMethod: WorkerMethod[Work], contacts: Seq[Address]): Props = Props(classOf[ChangeWorker], init, workerMethod, contacts)

@@ -1,13 +1,12 @@
 package ch.seidel.pdm.system
 
-import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
+import scala.collection.JavaConversions
 import scala.collection.mutable
 import scala.collection.mutable.Queue
 import scala.concurrent.duration.Duration.Undefined
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+
 import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.OneForOneStrategy
@@ -16,22 +15,19 @@ import akka.actor.ReceiveTimeout
 import akka.actor.SupervisorStrategy.Resume
 import akka.actor.Terminated
 import akka.actor.actorRef2Scala
+import ch.seidel.akka.Log4JLogging
+import ch.seidel.pdm.PDMPattern.Abonnement
 import ch.seidel.pdm.PDMPattern.GiveWork
 import ch.seidel.pdm.PDMPattern.NowWorking
 import ch.seidel.pdm.PDMPattern.RegisterAck
 import ch.seidel.pdm.PDMPattern.RegisterWorker
 import ch.seidel.pdm.PDMPattern.Subscription
 import ch.seidel.pdm.PDMPattern.Work
-import ch.seidel.pdm.PDMPattern.Abonnement
 import ch.seidel.pdm.PDMPattern.WorkAvailable
+import ch.seidel.pdm.PDMSystemPattern.ListSubscription
 import ch.seidel.pdm.PDMSystemPattern.Publish
 import ch.seidel.pdm.PDMSystemPattern.Published
-import ch.seidel.pdm.PDMSystemPattern._
-import java.io.FileInputStream
-import java.io.ObjectInputStream
-import akka.contrib.pattern.ClusterReceptionistExtension
-import scala.collection.JavaConversions
-import ch.seidel.akka.Log4JLogging
+import ch.seidel.pdm.PDMSystemPattern.SubscriptionState
 
 object PDMSubscription {
   def props(init: Subscription, persImplName: String): Props = Props(classOf[PDMSubscription], init, persImplName)
@@ -58,7 +54,7 @@ class PDMSubscription(init: Subscription, persImplName: String) extends Actor wi
   }
   
   override def preStart() {
-    ClusterReceptionistExtension(context.system).registerService(self)
+    //ClusterReceptionistExtension(context.system).registerService(self)
     loadQueue
     val publisher = context.parent
     logger.info(self.path.toString + " subscribing to " + publisher)
@@ -67,7 +63,7 @@ class PDMSubscription(init: Subscription, persImplName: String) extends Actor wi
   
   override def postStop {
     logger.info(s"stopping PDMSubscription for Abonnement ${init.aboId}")
-    ClusterReceptionistExtension(context.system).unregisterService(self)
+    //ClusterReceptionistExtension(context.system).unregisterService(self)
     // if there is not-finished Work, take it back to the queue
     workers.values foreach {
       case (Some(work), false) =>

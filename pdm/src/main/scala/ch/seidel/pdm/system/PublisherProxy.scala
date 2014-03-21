@@ -1,48 +1,34 @@
 package ch.seidel.pdm.system
 
-import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.duration.Duration._
+import scala.collection.immutable.Seq
+import scala.collection.immutable.SortedSet
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+
 import akka.actor.Actor
-import akka.actor.ActorLogging
+import akka.actor.ActorIdentity
 import akka.actor.ActorRef
+import akka.actor.ActorSelection
+import akka.actor.ActorSelection.toScala
+import akka.actor.Address
+import akka.actor.Identify
 import akka.actor.OneForOneStrategy
-import akka.actor.PoisonPill
 import akka.actor.Props
+import akka.actor.RootActorPath
 import akka.actor.SupervisorStrategy.Restart
+import akka.actor.Terminated
 import akka.actor.actorRef2Scala
 import akka.cluster.Cluster
-import akka.contrib.pattern.ClusterSingletonManager
-import akka.contrib.pattern.DistributedPubSubExtension
-import akka.contrib.pattern.DistributedPubSubMediator
-import akka.contrib.pattern.DistributedPubSubMediator.Subscribe
-import akka.contrib.pattern.DistributedPubSubMediator.SubscribeAck
-import akka.pattern.ask
-import akka.actor.Terminated
-import akka.util.Timeout
-import akka.cluster.ClusterEvent._
-import akka.cluster.Member
-import scala.collection.immutable.SortedSet
-import akka.actor.RootActorPath
-import akka.cluster.ClusterEvent.MemberRemoved
-import akka.actor.ActorSelection
 import akka.cluster.ClusterEvent.CurrentClusterState
+import akka.cluster.ClusterEvent.MemberEvent
+import akka.cluster.ClusterEvent.MemberRemoved
 import akka.cluster.ClusterEvent.MemberUp
-import ch.seidel.akka.Log4JLogging
-import ch.seidel.pdm.PDMPattern
-import ch.seidel.pdm.PDMSystemPattern
-import ch.seidel.pdm.PDMPattern._
-import ch.seidel.pdm.PDMSystemPattern._
+import akka.cluster.ClusterEvent.UnreachableMember
+import akka.cluster.Member
 import akka.cluster.MemberStatus
-import akka.actor.ReceiveTimeout
-import akka.actor.Identify
-import akka.actor.ActorIdentity
-import akka.actor.Address
-import akka.actor.Terminated
-import scala.collection.immutable.Seq
+import ch.seidel.akka.Log4JLogging
+import ch.seidel.pdm.PDMSystemPattern.BecomeLeader
+import ch.seidel.pdm.PDMSystemPattern.End
 
 object PublisherProxy {
   def props(clusterNodes: Seq[Address], persImplName: String): Props = Props(classOf[PublisherProxy], clusterNodes, persImplName)

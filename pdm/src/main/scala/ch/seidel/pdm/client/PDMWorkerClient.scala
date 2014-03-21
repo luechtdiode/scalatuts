@@ -1,22 +1,32 @@
 package ch.seidel.pdm.client
 
-import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.language.postfixOps
-import scala.util.Random
-import com.typesafe.config.ConfigFactory
-import akka.actor._
-import akka.contrib.pattern._
-import akka.pattern._
-import akka.util.Timeout
-import ch.seidel.pdm.PDMPattern._
-import ch.seidel.pdm.PDMPattern
 import scala.collection.JavaConversions
 import scala.collection.immutable.Seq
-import com.typesafe.config.Config
-import java.net.InetAddress
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.SECONDS
+import scala.language.postfixOps
+import scala.util.Random
+
 import org.apache.log4j.Logger
+
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
+
+import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Address
+import akka.actor.PoisonPill
+import akka.actor.actorRef2Scala
+import akka.pattern.ask
+import akka.util.Timeout
+import ch.seidel.pdm.PDMPattern
+import ch.seidel.pdm.PDMPattern.Abonnement
+import ch.seidel.pdm.PDMPattern.Subscribe
+import ch.seidel.pdm.PDMPattern.Subscription
+import ch.seidel.pdm.PDMPattern.Unsubscribe
+import ch.seidel.pdm.PDMPattern.Work
+import ch.seidel.pdm.PDMPattern.clusterNodes
+import ch.seidel.pdm.PDMPattern.secureCookieConfig
 
 object PDMWorkerClient extends App {
   val logger: Logger = Logger.getLogger("APPL." + getClass.getName())// LogManager.getLogger(getClass)

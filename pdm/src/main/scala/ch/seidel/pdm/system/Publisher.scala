@@ -1,46 +1,54 @@
 package ch.seidel.pdm.system
 
+import java.io.File
+
+import scala.collection.JavaConversions
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.duration.Duration._
+import scala.concurrent.duration.Duration.Undefined
+import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+
 import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.OneForOneStrategy
-import akka.actor.Props
-import akka.actor.SupervisorStrategy.Resume
-import akka.actor.actorRef2Scala
 import akka.actor.PoisonPill
-import ch.seidel.pdm.PDMPattern
-import ch.seidel.pdm.PDMSystemPattern
-import akka.actor.Terminated
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.File
-import scala.util.matching.Regex
-import akka.contrib.pattern.ClusterSingletonManager
-import PDMPattern._
-import PDMSystemPattern._
-import akka.contrib.pattern.ClusterReceptionistExtension
-import akka.cluster.Cluster
+import akka.actor.Props
 import akka.actor.ReceiveTimeout
-import scala.collection.JavaConversions
+import akka.actor.SupervisorStrategy.Resume
+import akka.actor.Terminated
+import akka.actor.actorRef2Scala
 import ch.seidel.akka.Log4JLogging
+import ch.seidel.pdm.PDMPattern.Abonnement
+import ch.seidel.pdm.PDMPattern.AlreadySubscribed
+import ch.seidel.pdm.PDMPattern.PartnerChange
+import ch.seidel.pdm.PDMPattern.Subscribe
+import ch.seidel.pdm.PDMPattern.Subscription
+import ch.seidel.pdm.PDMPattern.Unsubscribe
+import ch.seidel.pdm.PDMPattern.Work
+import ch.seidel.pdm.PDMSystemPattern.Abonnements
+import ch.seidel.pdm.PDMSystemPattern.BecomeLeader
+import ch.seidel.pdm.PDMSystemPattern.End
+import ch.seidel.pdm.PDMSystemPattern.InternChange
+import ch.seidel.pdm.PDMSystemPattern.ListAbonnements
+import ch.seidel.pdm.PDMSystemPattern.ListSubscription
+import ch.seidel.pdm.PDMSystemPattern.Publish
+import ch.seidel.pdm.PDMSystemPattern.Published
+import ch.seidel.pdm.PDMSystemPattern.StartPublishing
+import ch.seidel.pdm.PDMSystemPattern.StopPublishing
+import ch.seidel.pdm.PDMSystemPattern.SubscriptionState
 
 object Publisher {
   val topic = "pdm-publisher"
   def props(persImplName: String): Props = Props(classOf[Publisher], persImplName)
-  def singletonProps(persImplName: String): Props = ClusterSingletonManager.props(
-      maxHandOverRetries = 10,
-      maxTakeOverRetries = 5,
-      singletonProps = hod => {
-        println("using singletonProps ...")
-        props(persImplName)},
-      singletonName = "publisher",
-      terminationMessage = End,
-      role = Some(topic))
+//  def singletonProps(persImplName: String): Props = ClusterSingletonManager.props(
+//      maxHandOverRetries = 10,
+//      maxTakeOverRetries = 5,
+//      singletonProps = hod => {
+//        println("using singletonProps ...")
+//        props(persImplName)},
+//      singletonName = "publisher",
+//      terminationMessage = End,
+//      role = Some(topic))
 }
 // extends EventsourcedProcessor 
 class Publisher(persImplName: String) extends Actor with Log4JLogging {
@@ -77,12 +85,12 @@ class Publisher(persImplName: String) extends Actor with Log4JLogging {
   }
   
   override def preStart {
-    ClusterReceptionistExtension(context.system).registerService(self)
+    //ClusterReceptionistExtension(context.system).registerService(self)
   }
   
   override def postStop {
     logger.info("stopping Publisher")
-    ClusterReceptionistExtension(context.system).unregisterService(self)
+    //ClusterReceptionistExtension(context.system).unregisterService(self)
   }
   
   def wrappedReceive = {

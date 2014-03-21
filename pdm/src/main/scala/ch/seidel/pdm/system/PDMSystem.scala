@@ -1,31 +1,39 @@
 package ch.seidel.pdm.system
 
-import scala.collection.JavaConversions
-import scala.collection.immutable._
+import scala.collection.immutable.List
+import scala.collection.immutable.Seq
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.Promise
-import scala.concurrent.duration._
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.SECONDS
 import scala.util.Random
-import scala.util.Try
+
+import org.apache.log4j.Logger
+
+import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+
 import akka.actor.ActorRef
 import akka.actor.ActorSystem
 import akka.actor.Address
 import akka.actor.Cancellable
+import akka.actor.actorRef2Scala
 import akka.cluster.Cluster
-import akka.cluster.ClusterEvent._
-import akka.dispatch.OnSuccess
-import akka.pattern._
+import akka.pattern.ask
 import akka.util.Timeout
-import ch.seidel.pdm.PDMPattern._
-import ch.seidel.pdm.PDMSystemPattern._
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigValue
-import akka.io.Inet
-import java.net.InetAddress
-import org.apache.log4j.Logger
+import ch.seidel.pdm.PDMPattern.ClusterNodesDEV
+import ch.seidel.pdm.PDMPattern.clusterNodes
+import ch.seidel.pdm.PDMPattern.secureCookieConfig
+import ch.seidel.pdm.PDMSystemPattern.Abonnements
+import ch.seidel.pdm.PDMSystemPattern.End
+import ch.seidel.pdm.PDMSystemPattern.InternChange
+import ch.seidel.pdm.PDMSystemPattern.ListAbonnements
+import ch.seidel.pdm.PDMSystemPattern.ListSubscription
+import ch.seidel.pdm.PDMSystemPattern.StartPublishing
+import ch.seidel.pdm.PDMSystemPattern.StopPublishing
+import ch.seidel.pdm.PDMSystemPattern.SubscriptionState
 
 object PDMSystem extends App {
   import Publisher._
