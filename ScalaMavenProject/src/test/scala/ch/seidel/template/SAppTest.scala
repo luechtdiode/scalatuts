@@ -4,7 +4,7 @@ import org.junit._
 import Assert._
 
 @Test
-class AppTest {
+class SAppTest {
 
     @Test
     def testOK() = assertTrue(true)

@@ -4,6 +4,6 @@ package ch.seidel.template
  * Hello world!
  *
  */
-object App extends Application {
+object SApp extends App {
   println( "Hello World!" )
 }
