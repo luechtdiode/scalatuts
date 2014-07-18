@@ -68,11 +68,6 @@
       <version>${akka.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-testkit_${scala.majorversion}</artifactId>
-      <version>${akka.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.codahale.metrics</groupId>
       <artifactId>metrics-core</artifactId>
       <version>3.0.1</version>
@@ -108,13 +103,19 @@
 		<!-- Test -->
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2_2.11</artifactId>
+      <artifactId>specs2_${scala.majorversion}</artifactId>
       <version>2.3.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-testkit_${scala.majorversion}</artifactId>
+      <version>${akka.version}</version>
+      <scope>test</scope>
+      </dependency>
+    <dependency>
       <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_2.11</artifactId>
+      <artifactId>scalatest_${scala.majorversion}</artifactId>
       <version>2.2.0</version>
       <scope>test</scope>
     </dependency>
