@@ -6,7 +6,7 @@
   <inceptionYear>2014</inceptionYear>
   <properties>
     <scala.majorversion>2.11</scala.majorversion>
-    <scala.version>${scala.majorversion}.1</scala.version>
+    <scala.version>${scala.majorversion}.4</scala.version>
     <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
     <akka.version>2.3.8</akka.version>
   </properties>
@@ -46,21 +46,45 @@
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-contrib_${scala.majorversion}</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+          <exclusion>
+              <groupId>org.scala-stm</groupId>
+              <artifactId>scala-stm_${scala.majorversion}</artifactId>
+          </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-actor_${scala.majorversion}</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+          <exclusion>
+              <groupId>org.scala-stm</groupId>
+              <artifactId>scala-stm_${scala.majorversion}</artifactId>
+          </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-agent_${scala.majorversion}</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+          <exclusion>
+              <groupId>org.scala-stm</groupId>
+              <artifactId>scala-stm_${scala.majorversion}</artifactId>
+          </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-remote_${scala.majorversion}</artifactId>
       <version>${akka.version}</version>
+      <exclusions>
+          <exclusion>
+              <groupId>org.scala-stm</groupId>
+              <artifactId>scala-stm_${scala.majorversion}</artifactId>
+          </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.codahale.metrics</groupId>
@@ -68,15 +92,41 @@
       <version>3.0.1</version>
     </dependency>
 
-		<dependency>
+		<!-- dependency>
 			<groupId>org.scalanlp</groupId>
-			<artifactId>breeze_2.11</artifactId>
+			<artifactId>breeze_${scala.majorversion}</artifactId>
 			<version>0.10</version>
 		</dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
+    </dependency-->
+    
+		<!-- Test -->
+    <dependency>
+      <groupId>org.specs2</groupId>
+      <artifactId>specs2_${scala.majorversion}</artifactId>
+      <version>2.3.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-testkit_${scala.majorversion}</artifactId>
+      <version>${akka.version}</version>
+      <scope>test</scope>
+      </dependency>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_${scala.majorversion}</artifactId>
+      <version>2.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.9.5</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -84,10 +134,11 @@
       <version>4.7</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.specs2</groupId>
-      <artifactId>specs2_2.11</artifactId>
-      <version>2.3.11</version>
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>1.11</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -159,10 +210,10 @@
             <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
             <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
           </classpathContainers>
-		      <excludes>
+		      <!-- excludes>
 		        <exclude>org.scala-lang:scala-library</exclude>
 		        <exclude>org.scala-lang:scala-compiler</exclude>
-		      </excludes>
+		      </excludes-->
 		      <sourceIncludes>
 		        <sourceInclude>**/*.scala</sourceInclude>
 		        <sourceInclude>**/*.java</sourceInclude>
