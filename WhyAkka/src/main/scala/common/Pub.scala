@@ -7,22 +7,23 @@ import akka.actor.ActorRef
 import akka.actor.Props
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 
-class Pub(origin: String, target: ActorRef, scheduleRule: String) extends Actor {
+class Pub(origin: String, target: ActorRef, scheduleRule: String, interval: FiniteDuration) extends Actor {
   import common.MessageProtocol._
   var counter = 0
-  val scheduler = QuartzSchedulerExtension(context.system)
-  val schedRuleName = origin + "_ScheduleRule"
+  
+  override def preStart = {
   /*
    * Make use of QuartzSchedulerExtension if needed:
    *  see https://github.com/enragedginger/akka-quartz-scheduler
    *      http://quartz-scheduler.org/api/2.1.7/org/quartz/CronExpression.html
    */
-  QuartzSchedulerExtension(context.system).createSchedule(schedRuleName, None, scheduleRule, None)
-  
-  override def preStart = {
-    scheduler.schedule(schedRuleName, self, "tick")
-    // simple Akka-Scheduler doesn't support true scheduling
-    // context.system.scheduler.schedule(interval, interval, self, "tick")
+//    val schedRuleName = origin + "_ScheduleRule"
+//    val scheduler = QuartzSchedulerExtension(context.system)
+//    scheduler.createSchedule(schedRuleName, None, scheduleRule, None)
+//    scheduler.schedule(schedRuleName, self, "tick")
+
+    // simple Akka-Scheduler doesn't support true scheduling   */
+    context.system.scheduler.schedule(interval, interval, self, "tick")
   }
   
   override def receive = {
@@ -34,5 +35,5 @@ class Pub(origin: String, target: ActorRef, scheduleRule: String) extends Actor 
 
 object Pub {
   def props(origin: String, target: ActorRef, interval: FiniteDuration) = 
-    Props(classOf[Pub], origin, target, s"*/${interval.toSeconds} * * ? * *")
+    Props(classOf[Pub], origin, target, s"*/${interval.toSeconds} * * ? * *", interval)
 }
