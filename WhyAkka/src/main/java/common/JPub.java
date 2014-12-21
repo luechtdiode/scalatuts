@@ -2,10 +2,10 @@ package common;
 
 import scala.concurrent.duration.FiniteDuration;
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.japi.Creator;
-
 
 public class JPub extends UntypedActor implements JMessageProtocol {
   private static class JPubCreator implements Creator<JPub> {
@@ -18,13 +18,12 @@ public class JPub extends UntypedActor implements JMessageProtocol {
       this.target = target;
       this.interval = interval;
     }
-    @Override
-    public JPub create() throws Exception {
+    public JPub create() {
       return new JPub(origin, target, interval);
     }
   }
   
-  public static Props props(final String origin, final ActorRef target, final FiniteDuration interval) {
+  public static Props props(String origin, ActorRef target, FiniteDuration interval) {
     return Props.create(new JPubCreator(origin, target, interval));
   }
   
@@ -41,7 +40,9 @@ public class JPub extends UntypedActor implements JMessageProtocol {
   
   @Override
   public void preStart() {
-    getContext().system().scheduler().schedule(interval, interval, getSelf(), "tick", getContext().system().dispatcher(), null);
+    ActorSystem system = getContext().system();
+    system.scheduler().schedule(
+        interval, interval, getSelf(), "tick", system.dispatcher(), null);
   }
   
   @Override

@@ -46,13 +46,15 @@ public class JQueue extends UntypedActor implements JMessageProtocol {
         freeWorkers.add(worker);
       }
     }
-    if(!freeWorkers.isEmpty()) {
+    while(!freeWorkers.isEmpty()) {
       NewsMessage next = dequeue();
-      if(next != null) {
-        ActorRef worker = freeWorkers.get(0);
+      if(next == null) {
+        break;
+      }
+      else {
+        ActorRef worker = freeWorkers.remove(0);
         workerstates.put(worker, next);
         worker.tell(next, getContext().self());
-        trySend();
       }
     }
   }
@@ -65,11 +67,13 @@ public class JQueue extends UntypedActor implements JMessageProtocol {
     }
     else if(message instanceof MessageProcessed) {
       workerstates.remove(getContext().sender());
+      trySend();
     }
     else if(message instanceof Subscribe) {
       Subscribe s = (Subscribe)message;
       getContext().watch(s.sub);
       workers.add(s.sub);
+      trySend();
     }
     else if(message instanceof Terminated) {
       Terminated t = (Terminated)message;

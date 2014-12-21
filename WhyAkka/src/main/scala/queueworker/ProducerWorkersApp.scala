@@ -5,7 +5,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration.DurationInt
 
-object Producer extends App {
+/**
+ * Demonstrates
+ */
+object ProducerWorkersApp extends App {
   import common.MessageProtocol._  
   import common.Pub
   

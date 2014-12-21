@@ -5,7 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration.DurationInt
 
-object PubSub extends App {
+object PubSubApp extends App {
   import common.MessageProtocol._  
   import common.Pub
   

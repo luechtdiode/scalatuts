@@ -10,7 +10,7 @@ import common.JMessageProtocol;
 import common.JPub;
 
 
-public class JPubSub {
+public class JPubSubApp {
 
   public static void main(String[] args) {
     ActorSystem system = ActorSystem.create("PubSub");

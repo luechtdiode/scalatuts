@@ -28,6 +28,7 @@ public class JTopic extends UntypedActor implements JMessageProtocol {
     else if(message instanceof Subscribe) {
       Subscribe s = (Subscribe)message;
       subscribers.add(s.sub);
+      getContext().watch(s.sub);
     }
     else if(message instanceof Terminated) {
       Terminated t = (Terminated)message;

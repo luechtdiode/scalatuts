@@ -63,6 +63,7 @@ class Queue extends Actor {
 
     case MessageProcessed =>
       workerstates = workerstates + (sender -> None)
+      trySend
 
     case Terminated(sub) =>
       workerstates.get(sub) match {

@@ -9,7 +9,7 @@ import akka.actor.ActorSystem;
 import common.JMessageProtocol;
 import common.JPub;
 
-public class JProducer {
+public class JProducerWorkersApp {
   public static void main(String[] args) {
     ActorSystem system = ActorSystem.create("PubSub");
     
