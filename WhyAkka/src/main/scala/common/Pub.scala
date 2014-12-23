@@ -5,7 +5,7 @@ import scala.concurrent.duration.FiniteDuration
 import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.Props
-import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
+//import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 
 class Pub(origin: String, target: ActorRef, scheduleRule: String, interval: FiniteDuration) extends Actor {
   import common.MessageProtocol._

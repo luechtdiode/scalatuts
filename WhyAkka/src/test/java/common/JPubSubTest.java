@@ -17,7 +17,9 @@ import akka.remote.Ack;
 import akka.testkit.JavaTestKit;
 import akka.testkit.TestActorRef;
 import akka.testkit.TestProbe;
-import common.JMessageProtocol.*;
+
+import common.JMessageProtocol.NewsMessage;
+import common.JMessageProtocol.Subscribe;
 
 public class JPubSubTest {
   static ActorSystem actorSystem;

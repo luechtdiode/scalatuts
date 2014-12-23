@@ -41,7 +41,7 @@ class Queue extends Actor {
         case None => println("empty queue")
       }
     }
-    else if(workerstates.size == 0) {
+    else if (workerstates.size == 0) {
       println("no worker registered. queuesize = " + queue.size)
     }
     else {
@@ -68,7 +68,7 @@ class Queue extends Actor {
     case Terminated(sub) =>
       workerstates.get(sub) match {
         case Some(Some(msg)) => enqueue(msg)
-        case _ =>
+        case _               =>
       }
       workerstates = workerstates - sub
       context.unwatch(sub)
