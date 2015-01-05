@@ -9,6 +9,7 @@ import common.JMessageProtocol;
 
 public class JClusterWorkers {
   public static void main(String[] args) {
+    
     ActorSystem system = ActorSystem.create("PubSub", 
         ConfigFactory.systemProperties().withFallback(
             ConfigFactory.load().getConfig("subscriber")));

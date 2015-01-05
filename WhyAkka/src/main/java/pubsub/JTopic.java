@@ -24,11 +24,13 @@ public class JTopic extends UntypedActor implements JMessageProtocol {
       for(ActorRef actor : subscribers) {
         actor.tell(message, getSelf());
       }
+      System.out.println("new message published from: " + getSender().path());
     }
     else if(message instanceof Subscribe) {
       Subscribe s = (Subscribe)message;
       subscribers.add(s.sub);
       getContext().watch(s.sub);
+      System.out.println("new subscriber registered: " + s.sub + ", " + subscribers);
     }
     else if(message instanceof Terminated) {
       Terminated t = (Terminated)message;
